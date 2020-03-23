@@ -77,11 +77,11 @@
                 for (let i = 0; i < cameras.length; i++) {
                     document.getElementById('info').innerHTML += `Nombre: ${cameras[i].name}<br>`;
                     console.log(cameras[i].name);
-                    cameras[i].name.indexOf('back') > -1 ? camerasBack.push(cameras[i]) : camerasFront.push(cameras[i]);
+                    cameras[i].name.indexOf('back') > -1 || cameras[i].name.indexOf('trasera') > -1 ? camerasBack.push(cameras[i]) : camerasFront.push(cameras[i]);
                 }
                 //console.log(`Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}`);
                 document.getElementById('info').innerHTML += `Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}<br>`;
-                scanner.start(cameras[cameras.length - 1]);
+                camerasBack.length > 0 ? scanner.start(camerasBack[0]) : scanner.start(camerasFront[0]);
             } else {
                 console.error("Cámara NO disponible!");
                 document.getElementById('info').innerHTML += `<br>Cámara NO disponible!<br>`;
