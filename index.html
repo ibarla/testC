@@ -81,7 +81,7 @@
                 }
                 //console.log(`Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}`);
                 document.getElementById('info').innerHTML += `Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}<br>`;
-                //scanner.start(cameras[cameras.length - 1]);
+                scanner.start(cameras[cameras.length - 1]);
             } else {
                 console.error("Cámara NO disponible!");
                 document.getElementById('info').innerHTML += `<br>Cámara NO disponible!<br>`;
