@@ -28,43 +28,45 @@
         scanner.addListener('scan', function (content) {
             console.log(content);
         }); */
-/* 
-        let myPreferredCameraDeviceId;
-        navigator.mediaDevices.enumerateDevices()
-            .then(function (devices) {
-                let camerasBack = [];
-                let camerasFront = [];
-                devices.forEach(function (device) {
-                    if (device.kind == 'videoinput') {
-                        device.label.indexOf('back') > -1 ? camerasBack.push(device.deviceId) : camerasFront.push(device.deviceId);
+        /* 
+                let myPreferredCameraDeviceId;
+                navigator.mediaDevices.enumerateDevices()
+                    .then(function (devices) {
+                        let camerasBack = [];
+                        let camerasFront = [];
+                        devices.forEach(function (device) {
+                            if (device.kind == 'videoinput') {
+                                device.label.indexOf('back') > -1 ? camerasBack.push(device.deviceId) : camerasFront.push(device.deviceId);
+        
+                                console.log(device);
+                                
+                                console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
+                            }
+                        console.log(`Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}`);
+                            console.log(camerasBack[0])
+                            myPreferredCameraDeviceId = camerasBack[0];
+                        });
+                    })
+                    .catch(function (err) {
+                        console.log(err.name + ": " + err.message);
+                    });
+        
+                // Prefer camera resolution nearest to 1280x720.
+                var constraints = { video: { width: 1280, height: 720 }, deviceId: {exact: myPreferredCameraDeviceId} }; 
+        
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (mediaStream) {console.log(mediaStream)
+                        var video = document.querySelector('video');
+                        video.srcObject = mediaStream;
+                        video.onloadedmetadata = function (e) {
+                            video.play();
+                        };
+                    })
+                    .catch(function (err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+         */
 
-                        console.log(device);
-                        
-                        console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
-                    }
-                console.log(`Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}`);
-                    console.log(camerasBack[0])
-                    myPreferredCameraDeviceId = camerasBack[0];
-                });
-            })
-            .catch(function (err) {
-                console.log(err.name + ": " + err.message);
-            });
-
-        // Prefer camera resolution nearest to 1280x720.
-        var constraints = { video: { width: 1280, height: 720 }, deviceId: {exact: myPreferredCameraDeviceId} }; 
-
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(function (mediaStream) {console.log(mediaStream)
-                var video = document.querySelector('video');
-                video.srcObject = mediaStream;
-                video.onloadedmetadata = function (e) {
-                    video.play();
-                };
-            })
-            .catch(function (err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
- */
-
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        document.getElementById('info').innerHTML += `iOS?: ${iOS}<br>`;
 
 
         let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
