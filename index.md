@@ -75,7 +75,7 @@
                 let camerasBack = [];
                 let camerasFront = [];
                 for (let i = 0; i < cameras.length; i++) {
-                    document.getElementById('info').innerHTML += `Nombre: ${cameras[i].name}<br>`;
+                    document.getElementById('info').innerHTML += `Nombre:: ${cameras[i].name}<br>`;
                     console.log(cameras[i].name);
                     cameras[i].name.indexOf('back') > -1 || cameras[i].name.indexOf('trasera') > -1 ? camerasBack.push(cameras[i]) : camerasFront.push(cameras[i]);
 
