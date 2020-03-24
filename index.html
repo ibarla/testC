@@ -11,6 +11,8 @@
     <h1 id="info"></h1>
     <video id="preview"></video>
     <!-- <video id="video"></video> -->
+    <h3>Intercambia cámaras dsiponibles</h3>
+    <div id="cams"></div>
     <script type="text/javascript">
         /* let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
         console.log(scanner);
@@ -66,18 +68,30 @@
                     .catch(function (err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
          */
 
+         let divCams = document.getElementById('cams');
+
+         function enlace(cam){
+             let a = document.createElement('a');
+             a.innerHTML=cam.name;
+             a.addEventListener('click', ()=>selectCamara(cam))
+             divCams.appendChild(a)
+             divCams.appendChild(document.createElement('br'))
+             divCams.appendChild(document.createElement('br'))
+         }
+
         var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         document.getElementById('info').innerHTML += `iOS?: ${iOS}<br>`;
 
 
         let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
         console.log(scanner);
+                let camerasBack = [];
+                let camerasFront = [];
         Instascan.Camera.getCameras().then(cameras => {
 
             if (cameras.length > 0) {
-                let camerasBack = [];
-                let camerasFront = [];
                 for (let i = 0; i < cameras.length; i++) {
+                    enlace(cameras[i]);
                     document.getElementById('info').innerHTML += `Nombre: ${cameras[i].name}<br>`;
                     console.log(cameras[i].name);
                     cameras[i].name.indexOf('back') > -1 || cameras[i].name.indexOf('trasera') > -1 ? camerasBack.push(cameras[i]) : camerasFront.push(cameras[i]);
@@ -94,6 +108,10 @@
         }).catch(e => {
             console.log(e);
         })
+
+        function selectCamara(cam){
+            scanner.start(cam);
+        };
     </script>
 </body>
 
