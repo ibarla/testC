@@ -10,10 +10,25 @@
     <h1>Pruebas con cam</h1>
     <h1 id="info"></h1>
     <video id="preview"></video>
-    <!-- <video id="video"></video> -->
+    <video id="video"></video>
     <h3>Intercambia cámaras dsiponibles</h3>
     <div id="cams"></div>
+    <div id="result"></div>
+
+
     <script type="text/javascript">
+
+        let result = document.getElementById("result");
+
+        if (navigator.mediaDevices.getSupportedConstraints().deviceId) {
+            result.innerHTML = "Supported!";
+        } else {
+            result.innerHTML = "Not supported!";
+        }
+
+
+
+
         /* let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
         console.log(scanner);
 
@@ -31,62 +46,101 @@
         scanner.addListener('scan', function (content) {
             console.log(content);
         }); */
-        /* 
-                let myPreferredCameraDeviceId;
-                navigator.mediaDevices.enumerateDevices()
-                    .then(function (devices) {
-                        let camerasBack = [];
-                        let camerasFront = [];
-                        devices.forEach(function (device) {
-                            if (device.kind == 'videoinput') {
-                                device.label.indexOf('back') > -1 ? camerasBack.push(device.deviceId) : camerasFront.push(device.deviceId);
-        
-                                console.log(device);
-                                
-                                console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
-                            }
-                        console.log(`Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}`);
-                            console.log(camerasBack[0])
-                            myPreferredCameraDeviceId = camerasBack[0];
-                        });
-                    })
-                    .catch(function (err) {
-                        console.log(err.name + ": " + err.message);
-                    });
-        
-                // Prefer camera resolution nearest to 1280x720.
-                var constraints = { video: { width: 1280, height: 720 }, deviceId: {exact: myPreferredCameraDeviceId} }; 
-        
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function (mediaStream) {console.log(mediaStream)
-                        var video = document.querySelector('video');
-                        video.srcObject = mediaStream;
-                        video.onloadedmetadata = function (e) {
-                            video.play();
-                        };
-                    })
-                    .catch(function (err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
-         */
 
-         let divCams = document.getElementById('cams');
+        let myPreferredCameraDeviceId;
+        navigator.mediaDevices.enumerateDevices()
+            .then(function (devices) {
+                let camerasBack = [];
+                let camerasFront = [];
+                devices.forEach(function (device) {
+                    if (device.kind == 'videoinput') {
+                        device.label.indexOf('back') > -1 ? camerasBack.push(device.deviceId) : camerasFront.push(device.deviceId);
 
-         function enlace(cam){
-             let a = document.createElement('a');
-             a.innerHTML=cam.name;
-             a.addEventListener('click', ()=>selectCamara(cam))
-             divCams.appendChild(a)
-             divCams.appendChild(document.createElement('br'))
-             divCams.appendChild(document.createElement('br'))
-         }
+                        console.log(device);
+
+                        console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
+                    }
+                    console.log(`Núm frontales: ${camerasFront.length}, Núm traseras: ${camerasBack.length}`);
+                    console.log(camerasBack[0])
+                    myPreferredCameraDeviceId = camerasBack[0];
+                });
+            })
+            .catch(function (err) {
+                console.log(err.name + ": " + err.message);
+            });
+
+        // Prefer camera resolution nearest to 1280x720.
+        //var constraints = { video: { width: 1280, height: 720 }, deviceId: {exact: myPreferredCameraDeviceId} }; 
+        let constraints;
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        if (iOS) {
+            constraints = {
+                audio: false,
+                video: {
+                    facingMode: 'environment',
+                    mandatory: {
+                        sourceId: this.id,
+                        minWidth: 600,
+                        maxWidth: 800,
+                        minAspectRatio: 1.6
+                    },
+                    optional: []
+                }
+            };
+        } else {
+            constraints = {
+                audio: false,
+                video: {
+                    mandatory: {
+                        sourceId: this.id,
+                        minWidth: 600,
+                        maxWidth: 800,
+                        minAspectRatio: 1.6
+                    },
+                    optional: []
+                }
+            };
+        }
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+                console.log(mediaStream)
+                var video = document.querySelector('video');
+                video.srcObject = mediaStream;
+                video.onloadedmetadata = function (e) {
+                    video.play();
+                };
+            })
+            .catch(function (err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+
+
+
+
+
+
+        let divCams = document.getElementById('cams');
+
+        function enlace(cam) {
+            let a = document.createElement('a');
+            a.innerHTML = cam.name;
+            a.addEventListener('click', () => selectCamara(cam))
+            divCams.appendChild(a)
+            divCams.appendChild(document.createElement('br'))
+            divCams.appendChild(document.createElement('br'))
+        }
 
         var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         document.getElementById('info').innerHTML += `iOS?: ${iOS}<br>`;
 
 
-        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+        let scanner = new Instascan.Scanner({
+            video: document.getElementById('preview')
+        });
+
         console.log(scanner);
-                let camerasBack = [];
-                let camerasFront = [];
+        let camerasBack = [];
+        let camerasFront = [];
         Instascan.Camera.getCameras().then(cameras => {
 
             if (cameras.length > 0) {
@@ -109,7 +163,7 @@
             console.log(e);
         })
 
-        function selectCamara(cam){
+        function selectCamara(cam) {
             scanner.start(cam);
         };
     </script>
